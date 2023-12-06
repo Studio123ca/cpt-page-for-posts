@@ -7,18 +7,20 @@ Author: Studio123
 Author URI: https://studio123.ca
 */
 
-// Register the setting for each post type
+// Register settings
 function register_post_type_page_settings()
 {
     $post_types = get_post_types(['has_archive' => true], 'objects');
 
+    // Register the setting for each post type
     foreach ($post_types as $post_type) {
         register_setting('custom_post_type_page_for_posts', 'cpt_page_for_posts_' . $post_type->name);
     }
 
-    // Register the setting for the checkbox
+    // Register the setting for the uninstall cleanup
     register_setting('custom_post_type_page_for_posts', 'cpt_page_for_posts_enable_uninstall_cleanup');
 
+    // Set the uninstall cleanup to enabled by default
     add_option('cpt_page_for_posts_enable_uninstall_cleanup', 1);
 }
 add_action('admin_init', 'register_post_type_page_settings');
