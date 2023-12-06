@@ -64,6 +64,11 @@ function display_post_type_page_for_posts_fields($post_type)
     $current_value = get_option($option_name);
     $pages = get_pages();
     $post_type_object = get_post_type_object($post_type);
+
+    // sort pages alphabetically
+    usort($pages, function ($a, $b) {
+        return strcmp($a->post_title, $b->post_title);
+    });
 ?>
     <table class="form-table">
         <tr>
