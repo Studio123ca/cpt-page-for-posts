@@ -15,12 +15,11 @@ The **Custom Post Type Archive Pages** plugin allows you to select a specific pa
 ### Setting Archive Pages
 
 1. Navigate to the **Custom Post Type Archive Pages** settings page under the 'Settings' menu in the WordPress admin dashboard.
-2. Select a page for each custom post type from the provided dropdown list.
+2. Select a page for each custom post type from the provided dropdown list. Please note that the post type must have the `has_archive` argument set to `true` in order to be displayed in the list.
 3. Save your changes.
 
-### Displaying Archive Pages
-
-Use the `cpt_page_for_posts($post_type)` function to retrieve the page ID associated with a specific post type. This function can be useful when customizing the display of archives in your theme.
+### Retrieving Data from Archive Pages
+Utilize the cpt_page_for_posts($post_type) function to obtain the page ID linked to a particular post type. This function proves beneficial when extracting data from archives within your theme customization, similar to how you would use the `get_option('page_for_posts')` function to obtain the page ID linked to the main blog posts archive.
 
 ```php
 <?php
