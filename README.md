@@ -1,5 +1,4 @@
-# Custom Post Type Archive Pages Plugin
-~Current Version:1.0.0~
+# Custom Post Type Archive Pages Plugin for WordPress
 
 ## Description
 
