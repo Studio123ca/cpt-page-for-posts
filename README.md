@@ -19,7 +19,7 @@ The **Custom Post Type Archive Pages** plugin allows you to select a specific pa
 3. Save your changes.
 
 ### Retrieving Data from Archive Pages
-Utilize the cpt_page_for_posts($post_type) function to obtain the page ID linked to a particular post type. This function proves beneficial when extracting data from archives within your theme customization, similar to how you would use the `get_option('page_for_posts')` function to obtain the page ID linked to the main blog posts archive.
+Utilize the `cpt_page_for_posts()` function to obtain the page ID linked to a particular post type. This function proves beneficial when extracting data from archives within your theme customization, similar to how you would use the `get_option('page_for_posts')` function to obtain the page ID linked to the main blog posts archive.
 
 ```php
 <?php
