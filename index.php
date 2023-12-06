@@ -2,27 +2,10 @@
 /*
 Plugin Name: Custom Post Type Archive Pages
 Description: Select a specific Page as the main archive page for custom post types.
-Version: 1.0.1
+Version: 1.0.0
 Author: Studio123
 Author URI: https://studio123.ca
 */
-
-// Wordpress GitHub Plugin Updater
-include_once('inc/updater.php');
-
-// Load the updater
-if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
-    $config = array(
-        'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
-        'proper_folder_name' => 'cpt-page-for-posts',
-        'api_url' => 'https://api.github.com/repos/Studio123ca/cpt-page-for-posts',
-        'raw_url' => 'https://raw.github.com/Studio123ca/cpt-page-for-posts/master',
-        'github_url' => 'https://github.com/Studio123ca/cpt-page-for-posts',
-        'zip_url' => 'https://github.com/Studio123ca/cpt-page-for-posts/zipball/master',
-        'readme' => 'README.md',
-    );
-    new WP_GitHub_Updater($config);
-}
 
 // Register the setting for each post type
 function register_post_type_page_settings()
