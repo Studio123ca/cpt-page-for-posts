@@ -2,25 +2,23 @@
 /*
 Plugin Name: Custom Post Type Archive Pages
 Description: Select a specific Page as the main archive page for custom post types.
-Version: 1.0.0
+Version: 1.1.0
 Author: Studio123
 Author URI: https://studio123.ca
 */
 
-// Register settings
+// Register the setting for each post type
 function register_post_type_page_settings()
 {
     $post_types = get_post_types(['has_archive' => true], 'objects');
 
-    // Register the setting for each post type
     foreach ($post_types as $post_type) {
         register_setting('custom_post_type_page_for_posts', 'cpt_page_for_posts_' . $post_type->name);
     }
 
-    // Register the setting for the uninstall cleanup
+    // Register the setting for the checkbox
     register_setting('custom_post_type_page_for_posts', 'cpt_page_for_posts_enable_uninstall_cleanup');
 
-    // Set the uninstall cleanup to enabled by default
     add_option('cpt_page_for_posts_enable_uninstall_cleanup', 1);
 }
 add_action('admin_init', 'register_post_type_page_settings');
@@ -83,39 +81,50 @@ function display_post_type_page_fields($post_types)
             <p>Select a Page to act as the archive page for each custom post type. Only public post types with an <code>has_archive</code> enabled will be displayed here.</p>
             <p>The archive pages can be accessed by using the <code>cpt_page_for_posts($post_type)</code> function.</p>
             <?php
-            foreach ($post_types as $post_type) {
-                $post_type = $post_type->name;
-                $option_name = 'cpt_page_for_posts_' . $post_type;
-                $current_value = get_option($option_name);
-                $pages = get_pages();
-                $post_type_object = get_post_type_object($post_type);
+            if ($post_types) {
+                foreach ($post_types as $post_type) {
+                    $post_type = $post_type->name;
+                    $option_name = 'cpt_page_for_posts_' . $post_type;
+                    $current_value = get_option($option_name);
+                    $page_for_posts = get_option('page_for_posts');
+                    $front_page = get_option('page_on_front');
+                    $pages = get_pages(array(
+                        'sort_order' => 'ASC',
+                        'sort_column' => 'post_title',
+                        'hierarchical' => 0,
+                        'exclude' => array($page_for_posts, $front_page)
+                    ));
+                    $post_type_object = get_post_type_object($post_type);
 
-                // Sort pages alphabetically
-                usort($pages, function ($a, $b) {
-                    return strcmp($a->post_title, $b->post_title);
-                });
+                    // Sort pages alphabetically
+                    usort($pages, function ($a, $b) {
+                        return strcmp($a->post_title, $b->post_title);
+                    });
             ?>
-                <table class="form-table">
-                    <tbody>
-                        <tr>
-                            <th scope="row">
-                                <label for="<?php echo esc_attr($option_name); ?>">
-                                    <?php echo esc_html($post_type_object->labels->singular_name); ?>
-                                </label>
-                            </th>
-                            <td>
-                                <select id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>">
-                                    <option value="0" <?php selected($current_value, 0); ?>><?php esc_html_e('None (Default)', 'cpt-page-for-posts'); ?></option>
-                                    <?php foreach ($pages as $page) : ?>
-                                        <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($current_value, $page->ID); ?>><?php echo esc_html($page->post_title); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            <?php
-            } ?>
+                    <table class="form-table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    <label for="<?php echo esc_attr($option_name); ?>">
+                                        <?php echo esc_html($post_type_object->labels->singular_name); ?>
+                                    </label>
+                                </th>
+                                <td>
+                                    <select id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>">
+                                        <option value="0" <?php selected($current_value, 0); ?>><?php esc_html_e('None (Default)', 'cpt-page-for-posts'); ?></option>
+                                        <?php foreach ($pages as $page) : ?>
+                                            <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($current_value, $page->ID); ?>><?php echo esc_html($page->post_title); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <?php
+                }
+            } else { ?>
+                <p style="text-align:center;padding: 50px 0;"><?php esc_html_e('No public custom post types with an archive page were found.', 'cpt-page-for-posts'); ?></p>
+            <?php } ?>
         </div>
     </div>
 <?php
@@ -185,3 +194,21 @@ function cpt_page_for_posts($post_type)
 
     return get_option('cpt_page_for_posts_' . $post_type);
 }
+
+// Add post state to the page list table
+function add_post_state($post_states, $post)
+{
+    $post_types = get_post_types(['has_archive' => true], 'objects');
+
+    foreach ($post_types as $post_type) {
+        $option_name = 'cpt_page_for_posts_' . $post_type->name;
+        $page_id = get_option($option_name);
+
+        if ($page_id == $post->ID) {
+            $post_states['cpt_page_for_posts'] = $post_type->labels->singular_name . ' Archive';
+        }
+    }
+
+    return $post_states;
+}
+add_filter('display_post_states', 'add_post_state', 10, 2);
