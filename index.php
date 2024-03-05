@@ -2,7 +2,7 @@
 /*
 Plugin Name: Custom Post Type Archive Pages
 Description: Select a specific Page as the main archive page for custom post types.
-Version: 1.3.0
+Version: 1.3.1
 Author: Studio123
 Author URI: https://studio123.ca
 */

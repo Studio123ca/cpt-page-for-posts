@@ -5,7 +5,7 @@
  */
 
 // Use ACF_Location to add archive pages to the field group locations conditional
-class My_ACF_Location_Archive_Pages extends ACF_Location
+class ACF_Location_Archive_Pages extends ACF_Location
 {
 
     public function initialize()
@@ -19,7 +19,6 @@ class My_ACF_Location_Archive_Pages extends ACF_Location
     public function get_values($rule)
     {
         $choices = array();
-
         $post_types = get_post_types(['has_archive' => true], 'objects');
 
         foreach ($post_types as $post_type) {
@@ -40,21 +39,21 @@ class My_ACF_Location_Archive_Pages extends ACF_Location
     {
         if (isset($screen['post_id'])) {
             $post_id = $screen['post_id'];
-        } else {
-            return false;
-        }
+            $post_types = get_post_types(['has_archive' => true], 'objects');
 
-        $post_types = get_post_types(['has_archive' => true], 'objects');
-
-        foreach ($post_types as $post_type) {
-            $option_name = 'cpt_page_for_posts_' . $post_type->name;
-            $page_id = get_option($option_name);
-
-            if ($page_id == $post_id) {
-                if ($rule['operator'] == '==') {
-                    return true;
+            foreach ($post_types as $post_type) {
+                if ($post_id == $rule['value']) {
+                    if ($rule['operator'] == '==') {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else {
-                    return false;
+                    if ($rule['operator'] == '!=') {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         }
@@ -69,6 +68,6 @@ function my_acf_init_location_types()
 {
     // Check function exists, then include and register the custom location type class.
     if (function_exists('acf_register_location_type')) {
-        acf_register_location_type('My_ACF_Location_Archive_Pages');
+        acf_register_location_type('ACF_Location_Archive_Pages');
     }
 }
