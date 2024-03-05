@@ -10,6 +10,11 @@ The **Custom Post Type Archive Pages** plugin allows you to select a specific pa
 2. Upload the ZIP file via the WordPress admin dashboard or extract it into the `/wp-content/plugins/` directory.
 3. Activate the plugin through the 'Plugins' menu in WordPress.
 
+## Features
+- Displays the status of the Page in the list view in the admin panel. (Ex. Posts Page, Events Page, etc.)
+- Integrates with Advanced Custom Fields location rules, so fields can be displayed on the archive pages conditionally.
+- An intuitive settings page that allows you to select a page for each custom post type with an archive.
+
 ## Usage
 
 ### Setting Archive Pages
@@ -26,5 +31,7 @@ Utilize the `cpt_page_for_posts()` function to obtain the page ID linked to a pa
 $archive_page_id = cpt_page_for_posts('your_post_type');
 
 // Use $page_id to customize the display of the archive for 'your_post_type'.
+$title = get_the_title($archive_page_id);
+$acf_field = get_field('your_acf_field', $archive_page_id);
 ?>
 ```
