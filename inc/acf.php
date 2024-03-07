@@ -23,13 +23,10 @@ class ACF_Location_Archive_Pages extends ACF_Location
 
         foreach ($post_types as $post_type) {
             $post_type_object = get_post_type_object($post_type->name);
+            $option_slug = $post_type->name;
             $option_label = $post_type_object->labels->name . ' Page';
-            $option_name = 'cpt_page_for_posts_' . $post_type->name;
-            $page_id = get_option($option_name);
 
-            if ($page_id) {
-                $choices[$page_id] = $option_label;
-            }
+            $choices[$option_slug] = $option_label;
         }
 
         return $choices;
@@ -40,9 +37,10 @@ class ACF_Location_Archive_Pages extends ACF_Location
         if (isset($screen['post_id'])) {
             $post_id = $screen['post_id'];
             $post_types = get_post_types(['has_archive' => true], 'objects');
+            $archive_page_id = get_option('cpt_page_for_posts_' . $rule['value']);
 
             foreach ($post_types as $post_type) {
-                if ($post_id == $rule['value']) {
+                if ($post_id == $archive_page_id) {
                     if ($rule['operator'] == '==') {
                         return true;
                     } else {
