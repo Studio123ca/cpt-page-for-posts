@@ -93,6 +93,11 @@ function cpfp_display_post_type_page_fields($post_types)
                     ));
                     $post_type_object = get_post_type_object($post_type);
 
+                    // WPML compatibility
+                    if (class_exists('SitePress')) {
+                        $current_value = icl_object_id($current_value, 'page', true);
+                    }
+
                     // Sort pages alphabetically
                     usort($pages, function ($a, $b) {
                         return strcmp($a->post_title, $b->post_title);
@@ -109,8 +114,13 @@ function cpfp_display_post_type_page_fields($post_types)
                                 <td>
                                     <select id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>">
                                         <option value="0" <?php selected($current_value, 0); ?>><?php esc_html_e('None (Default)', 'cpt-page-for-posts'); ?></option>
-                                        <?php foreach ($pages as $page) : ?>
-                                            <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($current_value, $page->ID); ?>><?php echo esc_html($page->post_title); ?></option>
+                                        <?php 
+                                        foreach ($pages as $page) :
+                                            if (class_exists('SitePress')) {
+                                                $page_id = icl_object_id($page->ID, 'page', true);
+                                            }
+                                        ?>
+                                            <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($current_value, $page_id); ?>><?php echo esc_html($page->post_title); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
@@ -193,6 +203,11 @@ function cpfp_add_post_state($post_states, $post)
         $option_name = 'cpt_page_for_posts_' . $post_type->name;
         $page_id = get_option($option_name);
 
+        // WPML compatibility
+        if (class_exists('SitePress')) {
+            $page_id = icl_object_id($page_id, 'page', true);
+        }
+
         if ($page_id == $post->ID) {
             $archive_names[] = $post_type->labels->name . ' Page';
         }
@@ -217,6 +232,11 @@ function cpfp_display_edit_page_message($post)
     foreach ($post_types as $post_type) {
         $option_name = 'cpt_page_for_posts_' . $post_type->name;
         $page_id = get_option($option_name);
+
+        // WPML compatibility
+        if (class_exists('SitePress')) {
+            $page_id = icl_object_id($page_id, 'page', true);
+        }
 
         if ($page_id == $post->ID) {
             $archive_names[] = $post_type->labels->name;
