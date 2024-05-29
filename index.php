@@ -25,7 +25,7 @@ function cpt_page_for_posts($post_type)
 
     // WPML compatibility
     if (class_exists('SitePress')) {
-        $post_id = apply_filters( 'wpml_object_id', intval($post_id), 'page' );
+        $post_id = apply_filters( 'wpml_object_id', $post_id, 'page' );
     }
 
     return $post_id;
