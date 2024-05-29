@@ -21,5 +21,12 @@ function cpt_page_for_posts($post_type)
         return false;
     }
 
-    return get_option('cpt_page_for_posts_' . $post_type);
+    $post_id = get_option('cpt_page_for_posts_' . $post_type);
+
+    // WPML compatibility
+    if (class_exists('SitePress')) {
+        $post_id = apply_filters( 'wpml_object_id', $post_id, 'page' );
+    }
+
+    return $post_id;
 }
