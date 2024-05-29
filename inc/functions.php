@@ -118,9 +118,11 @@ function cpfp_display_post_type_page_fields($post_types)
                                         foreach ($pages as $page) :
                                             if (class_exists('SitePress')) {
                                                 $page_id = icl_object_id($page->ID, 'page', true);
+                                            } else {
+                                                $page_id = $page->ID;
                                             }
                                         ?>
-                                            <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($current_value, $page_id); ?>><?php echo esc_html($page->post_title); ?></option>
+                                            <option value="<?php echo esc_attr($page_id); ?>" <?php selected($current_value, $page_id); ?>><?php echo esc_html($page->post_title); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
